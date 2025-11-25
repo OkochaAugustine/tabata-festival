@@ -5,49 +5,23 @@ import { Box, Stack, Heading, Text, Button, Flex } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-// Motion components
-const MotionHeading = motion(Heading);
-const MotionText = motion(Text);
-const MotionButton = motion(Button);
-const MotionBox = motion(Box);
-
-// Rotating texts
 const rotatingTexts = [
   "Join the ultimate fitness carnival featuring high-intensity Tabata workouts!",
   "Expert trainers, live music, games, and endless fun await!",
   "Don’t miss out on this unforgettable celebration of energy, power, and transformation!",
 ];
 
-// Sparkle component
-const Sparkle = () => {
-  const top = Math.random() * 100;
-  const left = Math.random() * 100;
-  const size = 2 + Math.random() * 4;
-  const opacity = 0.4 + Math.random() * 0.6;
-  return (
-    <MotionBox
-      style={{
-        position: "absolute",
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: "50%",
-        background: "linear-gradient(45deg, #ff7ce5, #ffeb3b, #00e5ff)",
-        top: `${top}%`,
-        left: `${left}%`,
-        opacity,
-        pointerEvents: "none",
-      }}
-      animate={{ scale: [0.5, 1.5, 0.5], rotate: [0, 360] }}
-      transition={{ duration: 1 + Math.random(), repeat: Infinity }}
-    />
-  );
-};
-
 export default function HomePage() {
   const router = useRouter();
   const eventDate = new Date("2025-12-06T07:00:00");
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+
+  // Motion components inside the function
+  const MotionHeading = motion(Heading);
+  const MotionText = motion(Text);
+  const MotionButton = motion(Button);
+  const MotionBox = motion(Box);
 
   // Countdown timer
   useEffect(() => {
@@ -72,7 +46,32 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Animate numbers
+  // Sparkle component
+  const Sparkle = () => {
+    const top = Math.random() * 100;
+    const left = Math.random() * 100;
+    const size = 2 + Math.random() * 4;
+    const opacity = 0.4 + Math.random() * 0.6;
+    return (
+      <MotionBox
+        key={Math.random()}
+        style={{
+          position: "absolute",
+          width: `${size}px`,
+          height: `${size}px`,
+          borderRadius: "50%",
+          background: "linear-gradient(45deg, #ff7ce5, #ffeb3b, #00e5ff)",
+          top: `${top}%`,
+          left: `${left}%`,
+          opacity,
+          pointerEvents: "none",
+        }}
+        animate={{ scale: [0.5, 1.5, 0.5], rotate: [0, 360] }}
+        transition={{ duration: 1 + Math.random(), repeat: Infinity }}
+      />
+    );
+  };
+
   const numberAnimation = {
     initial: { scale: 0.8, opacity: 0 },
     animate: { scale: 1, opacity: 1 },
@@ -97,6 +96,7 @@ export default function HomePage() {
       pt={[20, 24, 28]}
       position="relative"
       overflowX="hidden"
+      overflowY="auto"
       _before={{
         content: '""',
         position: "absolute",
@@ -118,7 +118,6 @@ export default function HomePage() {
         alignItems="center"
         gap={[4, 6]}
       >
-        {/* Hero Heading */}
         <MotionHeading
           fontSize={["2xl", "3xl", "5xl"]}
           fontWeight="extrabold"
@@ -129,7 +128,6 @@ export default function HomePage() {
           Tabata Festival <span role="img" aria-label="party">🎉</span> with Stan
         </MotionHeading>
 
-        {/* Event details */}
         <MotionText
           fontSize={["sm", "md", "xl"]}
           fontWeight="bold"
@@ -140,7 +138,6 @@ export default function HomePage() {
           Date: 6th December 2025 • Time: 7:00am • Venue: The Base Landmark, Independence Layout, Enugu
         </MotionText>
 
-        {/* Rotating description */}
         <AnimatePresence mode="wait">
           <MotionText
             key={rotatingTexts[currentTextIndex]}
@@ -159,7 +156,6 @@ export default function HomePage() {
           </MotionText>
         </AnimatePresence>
 
-        {/* Countdown Timer */}
         <Text fontSize={["xl", "2xl", "3xl"]} fontWeight="bold" color="yellow.200">
           Countdown to the Event
         </Text>
@@ -186,9 +182,8 @@ export default function HomePage() {
           ))}
         </Flex>
 
-        {/* Register Button */}
         <MotionButton
-          mt={4}
+          mt={6}
           fontSize={["sm", "md", "lg"]}
           py={[3, 4, 6]}
           px={[6, 8, 12]}
