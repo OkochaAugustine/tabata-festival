@@ -147,7 +147,7 @@ export default function RegisterPage() {
           </Stack>
         </form>
         <Text mt={4} fontSize="sm" textAlign="center" color="gray.400">
-          After registering, your information will be sent to the admin dashboard.
+          
         </Text>
       </Box>
 

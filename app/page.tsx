@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Stack, Heading, Text, Button, Flex } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation"; // <-- added
+import { useRouter } from "next/navigation";
 
 // Motion components
 const MotionHeading = motion(Heading);
@@ -44,18 +44,10 @@ const Sparkle = () => {
 };
 
 export default function HomePage() {
-  const router = useRouter(); // <-- initialize router
+  const router = useRouter();
   const eventDate = new Date("2025-12-06T07:00:00");
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-
-  // Lock scrolling on mobile
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
 
   // Countdown timer
   useEffect(() => {
@@ -91,7 +83,8 @@ export default function HomePage() {
   return (
     <Box
       minH="100vh"
-      w="100vw"
+      w="100%"
+      maxW="100vw"
       backgroundImage="url('/images/foto.jpg')"
       backgroundSize="cover"
       backgroundPosition="center"
@@ -100,10 +93,10 @@ export default function HomePage() {
       flexDirection="column"
       alignItems="center"
       justifyContent="flex-start"
-      px={6}
-      pt={24}
+      px={[4, 6, 8]}
+      pt={[20, 24, 28]}
       position="relative"
-      overflow="hidden"
+      overflowX="hidden"
       _before={{
         content: '""',
         position: "absolute",
@@ -121,13 +114,13 @@ export default function HomePage() {
         direction="column"
         position="relative"
         zIndex={10}
-        maxW="3xl"
+        maxW={["90vw", "3xl"]}
         alignItems="center"
-        gap={6}
+        gap={[4, 6]}
       >
         {/* Hero Heading */}
         <MotionHeading
-          fontSize={["3xl", "4xl", "5xl"]}
+          fontSize={["2xl", "3xl", "5xl"]}
           fontWeight="extrabold"
           color="pink.300"
           initial={{ opacity: 0, y: -50 }}
@@ -138,7 +131,7 @@ export default function HomePage() {
 
         {/* Event details */}
         <MotionText
-          fontSize={["lg", "xl", "2xl"]}
+          fontSize={["sm", "md", "xl"]}
           fontWeight="bold"
           color="pink.200"
           initial={{ opacity: 0, y: 30 }}
@@ -151,7 +144,7 @@ export default function HomePage() {
         <AnimatePresence mode="wait">
           <MotionText
             key={rotatingTexts[currentTextIndex]}
-            fontSize={["md", "lg", "xl"]}
+            fontSize={["sm", "md", "lg"]}
             fontWeight="semibold"
             color="yellow.300"
             textAlign="center"
@@ -167,26 +160,26 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* Countdown Timer */}
-        <Text fontSize={["2xl", "3xl"]} fontWeight="bold" color="yellow.200">
+        <Text fontSize={["xl", "2xl", "3xl"]} fontWeight="bold" color="yellow.200">
           Countdown to the Event
         </Text>
-        <Flex justify="center" gap={[3, 6]} flexWrap="wrap">
+        <Flex justify="center" gap={[2, 4, 6]} flexWrap="wrap" w="100%">
           {["Days Left", "Hours", "Minutes", "Seconds"].map((label, i) => (
             <MotionBox
               key={i}
               bgGradient="linear(to-r, pink.400, yellow.400, red.400)"
-              px={6}
-              py={4}
+              px={[2, 4, 6]}
+              py={[2, 3, 4]}
               borderRadius="2xl"
-              minW="90px"
+              minW={["60px", "80px", "90px"]}
               textAlign="center"
               animate={{ scale: [1, 1.1, 1], rotate: [0, 2, -2, 0] }}
               transition={{ duration: 2, repeat: Infinity, repeatType: "loop", delay: i * 0.1 }}
             >
-              <MotionText fontSize={["2xl", "3xl"]} fontWeight="extrabold" {...numberAnimation} color="white">
+              <MotionText fontSize={["xl", "2xl", "3xl"]} fontWeight="extrabold" {...numberAnimation} color="white">
                 {i === 0 ? timeLeft.days : i === 1 ? timeLeft.hours : i === 2 ? timeLeft.minutes : timeLeft.seconds}
               </MotionText>
-              <MotionText fontSize="sm" fontWeight="bold" textTransform="uppercase" color="whiteAlpha.800">
+              <MotionText fontSize={["xs", "sm"]} fontWeight="bold" textTransform="uppercase" color="whiteAlpha.800">
                 {label}
               </MotionText>
             </MotionBox>
@@ -195,10 +188,10 @@ export default function HomePage() {
 
         {/* Register Button */}
         <MotionButton
-          mt={6}
-          fontSize={["md", "lg", "xl"]}
-          py={6}
-          px={12}
+          mt={4}
+          fontSize={["sm", "md", "lg"]}
+          py={[3, 4, 6]}
+          px={[6, 8, 12]}
           fontWeight="extrabold"
           borderRadius="full"
           bgGradient="linear(to-r, #ff0080, #ff8c00, #ffd700)"
@@ -208,9 +201,7 @@ export default function HomePage() {
             transform: "scale(1.15)",
             boxShadow: "0 0 25px #ffd700, 0 0 35px #ff0080",
           }}
-          animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
-          transition={{ duration: 2, repeat: Infinity, repeatType: "loop" }}
-          onClick={() => router.push("/register")} // <-- navigate to register page
+          onClick={() => router.push("/register")}
         >
           ⏳ Register Now & Secure Your Spot
         </MotionButton>
