@@ -23,43 +23,29 @@ const rotatingTexts = [
   "Don’t miss out on this unforgettable celebration of energy, power, and transformation!",
 ];
 
-const Sparkle = () => {
-  const top = Math.random() * 100;
-  const left = Math.random() * 100;
-  const size = 2 + Math.random() * 4;
-  const opacity = 0.4 + Math.random() * 0.6;
-
-  return (
-    <MotionBox
-      style={{
-        position: "absolute",
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: "50%",
-        background: "linear-gradient(45deg, #ff7ce5, #ffeb3b, #00e5ff)",
-        top: `${top}%`,
-        left: `${left}%`,
-        opacity,
-        pointerEvents: "none",
-      }}
-      animate={{ scale: [0.5, 1.5, 0.5], rotate: [0, 360] }}
-      transition={{ duration: 1 + Math.random(), repeat: Infinity }}
-    />
-  );
-};
+// IMAGE SLIDES
+const slides = ["/images/foto3.jpg", "/images/foto4.jpg"];
 
 export default function HomePage() {
   const router = useRouter();
   const eventDate = new Date("2025-12-06T07:00:00");
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0, hours: 0, minutes: 0, seconds: 0,
-  });
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // COUNTDOWN TIMER
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
       const diff = eventDate.getTime() - now.getTime();
+
       setTimeLeft({
         days: Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24))),
         hours: Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24)),
@@ -71,11 +57,19 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
+  // ROTATING TEXT
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prev) => (prev + 1) % rotatingTexts.length);
     }, 3500);
+    return () => clearInterval(interval);
+  }, []);
 
+  // SLIDESHOW
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -83,35 +77,49 @@ export default function HomePage() {
     <Box
       minH="100vh"
       w="100%"
-      backgroundImage="url('/images/foto.jpg')"
-      backgroundSize="cover"
-      backgroundPosition="center"
-      px={4}
-      py={10}
-      color="white"
       position="relative"
+      overflow="hidden"
       display="flex"
-      flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      overflowX="hidden"
-      _before={{
-        content: '""',
-        position: "absolute",
-        inset: 0,
-        background: "rgba(0,0,0,0.68)",
-      }}
+      px={[3, 4]}
+      py={[10, 14]}
     >
-      {Array.from({ length: 12 }).map((_, i) => (
-        <Sparkle key={i} />
-      ))}
+      {/* Background SLIDES */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={slides[currentSlide]}
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${slides[currentSlide]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            zIndex: 0,
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2 }}
+        />
+      </AnimatePresence>
 
+      {/* Dark overlay */}
+      <Box
+        position="absolute"
+        inset={0}
+        bg="rgba(0,0,0,0.6)"
+        zIndex={1}
+      />
+
+      {/* HERO CONTENT */}
       <Stack
-        spacing={6}
+        spacing={[4, 6]}
         textAlign="center"
-        position="relative"
         zIndex={10}
-        maxW="95%"
+        w="100%"
+        maxW="420px"
+        mx="auto"
         alignItems="center"
       >
         <MotionHeading
@@ -121,7 +129,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          Tabata Festival 🎉 with Stan
+          Tabata Festival 🎉 with Super Stan
         </MotionHeading>
 
         <MotionText
@@ -135,6 +143,7 @@ export default function HomePage() {
           Venue: The Base Landmark, Independence Layout, Enugu
         </MotionText>
 
+        {/* Rotating Sub Text */}
         <AnimatePresence mode="wait">
           <MotionText
             key={rotatingTexts[currentTextIndex]}
@@ -154,13 +163,8 @@ export default function HomePage() {
           Countdown to the Event
         </Text>
 
-        <Flex
-          justify="center"
-          gap={3}
-          flexWrap="wrap"
-          maxW="340px"
-          w="100%"
-        >
+        {/* Countdown Boxes */}
+        <Flex justify="center" gap={3} flexWrap="wrap" maxW="340px" w="100%">
           {[
             { label: "Days Left", value: timeLeft.days },
             { label: "Hours", value: timeLeft.hours },
@@ -192,8 +196,9 @@ export default function HomePage() {
           ))}
         </Flex>
 
+        {/* CTA BUTTON */}
         <MotionButton
-          w="90%"
+          w="100%"
           maxW="360px"
           py={4}
           fontSize={["md", "lg"]}
@@ -210,4 +215,5 @@ export default function HomePage() {
     </Box>
   );
 }
+
 

@@ -171,7 +171,7 @@ export default function RegisterPage() {
             </Text>
             <Button
               as="a"
-              href="https://chat.whatsapp.com/your-group-link"
+              href="https://chat.whatsapp.com/CoNevStMpAY9tninCDxaGh"
               target="_blank"
               colorScheme="green"
               size="md"
